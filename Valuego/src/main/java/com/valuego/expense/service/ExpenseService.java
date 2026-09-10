@@ -2,6 +2,7 @@ package com.valuego.expense.service;
 
 import com.valuego.expense.api.dto.request.ExpenseReqDto;
 import com.valuego.expense.api.dto.response.ExpenseInfoResDto;
+import com.valuego.expense.api.dto.response.ExpenseListResDto;
 import com.valuego.expense.entity.Expense;
 import com.valuego.expense.entity.ExpenseParticipant;
 import com.valuego.expense.entity.ExpensePayer;
@@ -14,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,5 +74,23 @@ public class ExpenseService {
         Expense savedExpense = expenseRepository.save(expense);
 
         return ExpenseInfoResDto.from(savedExpense);
+    }
+
+    // 지출 기록 전체 조회
+    public ExpenseListResDto getAllExpenses(Principal principal, Long groupId, String guestToken) {
+        Group group = entityFinderException.getGroupById(groupId);
+        validMemberException.validateGroupMember(principal, guestToken, group);
+
+        List<Expense> expenses = expenseRepository.findByGroupId(groupId);
+
+        List<ExpenseInfoResDto> expenseDtos = expenses.stream()
+                .map(ExpenseInfoResDto::from)
+                .toList();
+
+        BigDecimal totalSpentAmount = expenses.stream()
+                .map(Expense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return ExpenseListResDto.of(totalSpentAmount, expenseDtos);
     }
 }

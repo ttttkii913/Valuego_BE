@@ -26,7 +26,7 @@ public record ExpenseInfoResDto(
         int participantCount = 0;
         if (expense.getExpenseParticipants() != null) {
             participantCount = (int) expense.getExpenseParticipants().stream()
-                    .filter(p -> p.getIsExcluded() == null || !p.getIsExcluded())
+                    .filter(p -> p.getIsIncluded() != null && p.getIsIncluded())
                     .count();
         }
 
@@ -35,7 +35,7 @@ public record ExpenseInfoResDto(
                 .toList();
 
         List<ExpenseParticipantResDto> participantDtos = expense.getExpenseParticipants().stream()
-                .map(p -> new ExpenseParticipantResDto(p.getId(), p.getGroupMember().getId(), p.getIsExcluded()))
+                .map(p -> new ExpenseParticipantResDto(p.getId(), p.getGroupMember().getId(), p.getIsIncluded()))
                 .toList();
 
         return new ExpenseInfoResDto(
@@ -51,5 +51,5 @@ public record ExpenseInfoResDto(
     }
 
     public record ExpensePayerResDto(Long expensePayerId, Long groupMemberId) {}
-    public record ExpenseParticipantResDto(Long expenseParticipantId, Long groupMemberId, Boolean isExcluded) {}
+    public record ExpenseParticipantResDto(Long expenseParticipantId, Long groupMemberId, Boolean isIncluded) {}
 }

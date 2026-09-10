@@ -13,7 +13,7 @@ public class ExpenseParticipant {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Boolean isExcluded;
+    private Boolean isIncluded;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "expense_id")

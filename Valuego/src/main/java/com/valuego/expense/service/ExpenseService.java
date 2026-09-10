@@ -64,7 +64,7 @@ public class ExpenseService {
                 ExpenseParticipant participant = ExpenseParticipant.builder()
                         .expense(expense)
                         .groupMember(groupMember)
-                        .isExcluded(pDto.isExcluded())
+                        .isIncluded(pDto.isIncluded())
                         .build();
 
                 expense.getExpenseParticipants().add(participant);

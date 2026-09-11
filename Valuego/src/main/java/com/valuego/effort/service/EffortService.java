@@ -59,9 +59,12 @@ public class EffortService {
         GroupMember targetMember = entityFinderException.getGroupMemberById(targetMemberId);
         List<Effort> efforts = effortRepository.findByGroupIdAndTargetMemberId(groupId, targetMemberId);
 
-        Long totalRewardAmount = efforts.stream()
-                .mapToLong(e -> e.getEffortAmount() != null ? e.getEffortAmount() : 0L)
-                .sum();
+        List<Long> amounts = efforts.stream()
+                .map(Effort::getEffortAmount)
+                .filter(amount -> amount != null)
+                .toList();
+
+        Long averageAmount = calculateAverage(amounts);
 
         List<String> comments = efforts.stream()
                 .map(Effort::getComment)
@@ -71,9 +74,23 @@ public class EffortService {
         return EffortResultResDto.of(
                 targetMember.getId(),
                 targetMember.getMemberName(),
-                totalRewardAmount,
+                averageAmount,
                 efforts.size(),
                 comments
         );
+    }
+
+    // 평균값 계산
+    private Long calculateAverage(List<Long> amounts) {
+        if (amounts.isEmpty()) {
+            return 0L;
+        }
+
+        double average = amounts.stream()
+                .mapToLong(Long::longValue)
+                .average()
+                .orElse(0.0);
+
+        return Math.round(average / 100.0) * 100;
     }
 }

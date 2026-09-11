@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class Settlement {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

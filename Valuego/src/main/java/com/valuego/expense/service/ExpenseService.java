@@ -45,7 +45,7 @@ public class ExpenseService {
         // 결제자 payers 매핑
         if (expenseReqDto.payers() != null) {
             for (var pDto : expenseReqDto.payers()) {
-                GroupMember groupMember = entityFinderException.getGroupMemberById(pDto.groupMemberId());
+                GroupMember groupMember = entityFinderException.getGroupMemberByIdAndGroup(pDto.groupMemberId(), group.getId());
 
                 ExpensePayer payer = ExpensePayer.builder()
                         .expense(expense)
@@ -59,7 +59,7 @@ public class ExpenseService {
         // 참여자 participants 매핑
         if (expenseReqDto.participants() != null) {
             for (var pDto : expenseReqDto.participants()) {
-                GroupMember groupMember = entityFinderException.getGroupMemberById(pDto.groupMemberId());
+                GroupMember groupMember = entityFinderException.getGroupMemberByIdAndGroup(pDto.groupMemberId(), group.getId());
 
                 ExpenseParticipant participant = ExpenseParticipant.builder()
                         .expense(expense)

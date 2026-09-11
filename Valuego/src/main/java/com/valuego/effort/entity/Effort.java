@@ -9,7 +9,6 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 public class Effort {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
